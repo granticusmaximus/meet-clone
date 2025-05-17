@@ -1,12 +1,7 @@
-
-
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import { getAuth, onAuthStateChanged } from 'firebase/auth';
-import { initializeApp } from 'firebase/app';
-import { firebase } from './firebase'
+import { app } from './firebase'; // ✅ valid
 
-// Initialize Firebase
-const app = initializeApp(firebase);
 const auth = getAuth(app);
 
 const AuthContext = createContext();
@@ -26,9 +21,19 @@ export const AuthProvider = ({ children }) => {
     return unsubscribe;
   }, []);
 
+  if (loading) {
+    return (
+      <div className="d-flex justify-content-center align-items-center vh-100">
+        <div className="spinner-border text-primary" role="status" style={{ width: "3rem", height: "3rem" }}>
+          <span className="visually-hidden">Loading...</span>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <AuthContext.Provider value={{ currentUser }}>
-      {!loading && children}
+      {children}
     </AuthContext.Provider>
   );
 };

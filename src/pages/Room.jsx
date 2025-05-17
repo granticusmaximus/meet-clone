@@ -1,3 +1,4 @@
+import ChatSidebar from "../components/ChatSidebar";
 import React, { useEffect, useRef, useState } from "react";
 import { useParams } from "react-router-dom";
 import io from "socket.io-client";
@@ -41,7 +42,7 @@ export default function Room() {
         item?.peer.signal(payload.signal);
       });
     });
-  }, []);
+  }, [roomID]);
 
   function createPeer(userToSignal, callerID, stream) {
     const peer = new Peer({
@@ -74,12 +75,17 @@ export default function Room() {
   }
 
   return (
-    <Container className="d-flex flex-wrap justify-content-center">
-      <video ref={userVideo} autoPlay playsInline muted style={{ width: "30%" }} />
-      {peers.map((p, idx) => (
-        <Video key={idx} peer={p.peer} />
-      ))}
-    </Container>
+    <div className="d-flex" style={{ height: "100vh" }}>
+      <div style={{ flex: 1, overflowY: "auto" }}>
+        <Container className="d-flex flex-wrap justify-content-center">
+          <video ref={userVideo} autoPlay playsInline muted style={{ width: "30%" }} />
+          {peers.map((p, idx) => (
+            <Video key={idx} peer={p.peer} />
+          ))}
+        </Container>
+      </div>
+      <ChatSidebar roomId={roomID} username="Guest" />
+    </div>
   );
 }
 
